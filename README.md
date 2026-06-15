@@ -12,6 +12,71 @@ Full-stack application for processing NAMA DEX files. The app authenticates a us
 - Docker Compose
 - xUnit, FluentAssertions, Vitest, Testing Library, MSW
 
+## Architecture
+
+```mermaid
+flowchart LR
+  subgraph Browser["React SPA"]
+    Login["Login"]
+    Upload["DEX upload"]
+    Meters["Meters grid"]
+    Realtime["Processing status"]
+  end
+
+  subgraph Api["ASP.NET Core 9 Minimal API"]
+    Auth["Basic auth scheme"]
+    Endpoints["Endpoint groups"]
+    UseCases["Application use cases"]
+    Parser["DEX parser"]
+    Hub["SignalR hub"]
+  end
+
+  subgraph Database["SQL Server Express"]
+    Procedures["Stored procedures"]
+    Meter["DEXMeter"]
+    Lane["DEXLaneMeter"]
+  end
+
+  Login --> Auth
+  Upload --> Endpoints
+  Meters --> Endpoints
+  Realtime <--> Hub
+  Auth --> Endpoints
+  Endpoints --> UseCases
+  UseCases --> Parser
+  UseCases --> Procedures
+  Procedures --> Meter
+  Procedures --> Lane
+  Meter --> Lane
+```
+
+## Upload Processing Flow
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant User
+  participant SPA as React SPA
+  participant API as Minimal API
+  participant Parser as DEX Parser
+  participant DB as SQL Server
+  participant Hub as SignalR Hub
+
+  User->>SPA: Select DEX file
+  SPA->>SPA: Validate extension, size, filename and DEX header
+  SPA->>API: POST /dex with Basic Auth
+  API->>Hub: UploadReceived
+  API->>Parser: Parse ID, VA and PA segments
+  Parser-->>API: Parsed meter and lane data
+  API->>Hub: PersistenceStarted
+  API->>DB: SaveDEXMeter and SaveDEXLaneMeter in transaction
+  DB-->>API: Persisted DEXMeterId
+  API->>Hub: PersistenceCompleted
+  API-->>SPA: Upload response
+  SPA->>API: GET /dex
+  API-->>SPA: Meters with lanes
+```
+
 ## Test Credentials
 
 ```text
