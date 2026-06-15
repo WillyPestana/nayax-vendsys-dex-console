@@ -1,0 +1,8 @@
+IF DB_ID(N'VendSysDex') IS NULL
+BEGIN
+    CREATE DATABASE VendSysDex;
+END
+GO
+
+USE VendSysDex;
+GO

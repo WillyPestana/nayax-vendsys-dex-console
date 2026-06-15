@@ -1,0 +1,12 @@
+USE VendSysDex;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.ClearDEXData
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DELETE FROM dbo.DEXLaneMeter;
+    DELETE FROM dbo.DEXMeter;
+END
+GO
