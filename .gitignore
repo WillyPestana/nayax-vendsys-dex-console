@@ -1,0 +1,37 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Local challenge PDFs and internal notes
+docs/
+
+# .NET
+bin/
+obj/
+TestResults/
+*.user
+*.suo
+*.rsuser
+
+# Node
+node_modules/
+dist/
+coverage/
+.vite/
+npm-debug.log*
+
+# Docker / logs
+*.log
+
+# Database backups
+database/backups/*.bak
+!database/backups/VendSysDex.bak
+!database/backups/.gitkeep

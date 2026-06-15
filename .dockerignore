@@ -1,0 +1,13 @@
+.git
+.gitignore
+docs/
+.env
+.env.*
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+**/.vite/
+**/coverage/
+database/backups/*.bak
+!database/backups/.gitkeep
